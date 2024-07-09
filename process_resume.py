@@ -1,13 +1,13 @@
-import globals
-import json
-from glob import glob
 import os
+import json
 import shutil
+import mlflow
+import globals
+from glob import glob
+from config import hf_token2
+from train import train_model, save_trained_model
 from datasets import load_dataset, Dataset, DatasetDict
 from huggingface_hub import hf_hub_download, login, upload_file
-from config import hf_token2
-import mlflow
-from train import train_model, save_trained_model
 
 def process_resume(files, model_1, tokenizer_1, model_2, tokenizer_2):
     upload_files_to_drive(files)

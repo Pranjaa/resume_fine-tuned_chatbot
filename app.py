@@ -1,7 +1,7 @@
 import globals
 import requests
 import streamlit as st
-from inference import generate_response, load_model
+from inference import load_model, generate_response
 from process_resume import process_resume
 
 st.set_page_config(page_title="Resume Question-Answering")
