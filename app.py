@@ -1,17 +1,18 @@
+import globals
 import requests
 import streamlit as st
-from inference import generate_response
-from initialize import initialize
+from inference import generate_response, load_model
 from process_resume import process_resume
 
 st.set_page_config(page_title="Resume Question-Answering")
 st.header("Resume Question Answering")
 
-def main():
-    with st.spinner("Initializing..."):
-        model_1, tokenizer_1, model_2, tokenizer_2 = initialize()
-    st.write("Initialization done.")
+with st.spinner("Initializing..."):
+        model_1, tokenizer_1 = load_model(globals.BASE_MODEL_DATASET)
+        model_2, tokenizer_2 = load_model(globals.BASE_MODEL_TRAINING)
+st.write("Initialization done.")
 
+def main():
     question = st.text_input("Ask a question about the documents:")
 
     with st.sidebar:
