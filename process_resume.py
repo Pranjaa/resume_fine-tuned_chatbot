@@ -1,22 +1,20 @@
 import globals
 from train import train_model, save_trained_model
-from initialize import model_1, tokenizer_1, model_2, tokenizer_2
 import json
 from glob import glob
 import os
 import shutil
 from datasets import load_dataset, Dataset, DatasetDict
 from huggingface_hub import hf_hub_download, login, upload_file
-from initialize import hf_token2
+from config import hf_token2
 import mlflow
 
-
-def process_resume(files):
+def process_resume(files, model_1, tokenizer_1, model_2, tokenizer_2):
     upload_files_to_drive(files)
     generate_QA_pairs(model_1, tokenizer_1)
     split_data()
-    setup_fine_tuning_dataset(tokenizer_2)
-    training_arguments = train_model(model_2, tokenizer_2)
+    fine_tuning_dataset = setup_fine_tuning_dataset(tokenizer_2)
+    training_arguments = train_model(model_2, tokenizer_2, fine_tuning_dataset)
     save_trained_model(model_2, tokenizer_2)
     log_mlflow_params(training_arguments)
 
@@ -174,6 +172,8 @@ def setup_fine_tuning_dataset(tokenizer):
   fine_tuning_dataset = dataset.map(format_prompt, batched = True)
 
   print("Fine-tuning dataset loaded and formatted.") 
+
+  return fine_tuning_dataset
 
 def log_mlflow_params(training_arguments):
   with mlflow.start_run() as run:

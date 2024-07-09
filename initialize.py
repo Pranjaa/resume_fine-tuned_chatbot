@@ -12,6 +12,8 @@ def initialize():
   model_1, tokenizer_1 = load_model(globals.BASE_MODEL_DATASET)
   model_2, tokenizer_2 = load_model(globals.BASE_MODEL_TRAINING)
 
+  return model_1, tokenizer_1, model_2, tokenizer_2
+
 def mlflow_setup():
   print("Setting up MLflow...")
   databricks_host = "https://community.cloud.databricks.com/"

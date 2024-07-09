@@ -4,10 +4,9 @@ import torch
 from transformers import TrainingArguments
 from trl import SFTTrainer
 import os
-from initialize import hf_token, hf_token2
-from process_resume import fine_tuning_dataset
+from config import hf_token, hf_token2
 
-def train_model(model, tokenizer):
+def train_model(model, tokenizer, fine_tuning_dataset):
   trainer, training_arguments = setup_training(model ,tokenizer, fine_tuning_dataset, hf_token)
 
   print("Starting training.")

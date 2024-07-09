@@ -1,15 +1,15 @@
 import requests
 import streamlit as st
 from inference import generate_response
+from initialize import initialize
 from process_resume import process_resume
-from initialize import initialize, model_1, tokenizer_1
 
 st.set_page_config(page_title="Resume Question-Answering")
 st.header("Resume Question Answering")
 
 def main():
     with st.spinner("Initializing..."):
-        initialize()
+        model_1, tokenizer_1, model_2, tokenizer_2 = initialize()
     st.write("Initialization done.")
 
     question = st.text_input("Ask a question about the documents:")
@@ -24,7 +24,7 @@ def main():
                     st.error("Please upload at least one resume file.")
                 else:
                     with st.spinner("Processing resumes... this might take a while..."):
-                        process_resume(uploaded_files)
+                        process_resume(uploaded_files, model_1, tokenizer_1, model_2, tokenizer_2)
                     st.success("Resumes are processed. Model is retrained.")    
 
                     try:
