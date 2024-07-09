@@ -25,19 +25,18 @@ def main():
         uploaded_files = st.file_uploader("Upload the resumes:", type=['txt'], accept_multiple_files=True)
         
         if st.button("Process resumes"):
-            with st.spinner("Processing"):
-                if not uploaded_files:
-                    st.error("Please upload at least one resume file.")
-                else:
-                    with st.spinner("Processing resumes... this might take a while..."):
-                        process_resume(uploaded_files, model_1, tokenizer_1, model_2, tokenizer_2)
-                    st.success("Resumes are processed. Model is retrained.")    
+            if not uploaded_files:
+                st.error("Please upload at least one resume file.")
+            else:
+                with st.spinner("Processing resumes... this might take a while..."):
+                    process_resume(uploaded_files, model_1, tokenizer_1, model_2, tokenizer_2)
+                st.success("Resumes are processed. Model is retrained.")    
 
-                    try:
-                        st.success("Resumes uploaded successfully!")
+                try:
+                    st.success("Resumes uploaded successfully!")
 
-                    except requests.exceptions.RequestException as e:
-                        st.error(f"Error: {e}")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Error: {e}")
 
     if st.button("Submit Question"):
       with st.spinner('Generating Response...'):

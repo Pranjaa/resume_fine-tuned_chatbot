@@ -19,21 +19,27 @@ def process_resume(files, model_1, tokenizer_1, model_2, tokenizer_2):
     log_mlflow_params(training_arguments)
 
 def upload_files_to_drive(files):
-  os.makedirs(globals.TARGET_FOLDER, exist_ok=True)
+    os.makedirs(globals.TARGET_FOLDER, exist_ok=True)
 
-  uploaded_files = files.upload()
+    for uploaded_file in files:
+        filename = uploaded_file.name
+        destination_path = os.path.join(globals.TARGET_FOLDER, filename)
 
-  for filename in uploaded_files.keys():
-    destination_path = os.path.join(globals.TARGET_FOLDER, filename)
-    shutil.move(filename, destination_path)
-    print(f"File {filename} uploaded to {destination_path}")
+        with open(filename, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+
+        shutil.move(filename, destination_path)
+        print(f"File {filename} uploaded to {destination_path}")
 
 def generate_QA_pairs(model, tokenizer):
   print("Generating QA pairs.")
   all_results = []
 
-  if os.path.exists(globals.DATA_FILE_PATH):
-    with open(globals.DATA_FILE_PATH, "r") as json_file:
+  os.makedirs(globals.DIRECTORY_PATH, exist_ok=True)
+  data_file_path = os.path.join(globals.DATA_FILE_PATH, "data.json")
+
+  if os.path.exists(data_file_path):
+    with open(data_file_path, "r", encoding="utf-8") as json_file:
       all_results = json.load(json_file)
 
   for text_file in glob(os.path.join(globals.TARGET_FOLDER, "*.txt")):
