@@ -1,5 +1,33 @@
 import globals
 import mlflow
+from unsloth import FastLanguageModel
+import torch
+
+def load_model(model_name):
+  torch.cuda.empty_cache()
+  print(f"Loading model: {model_name}")
+
+  model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name = model_name,
+    max_seq_length = globals.MAX_SEQ_LENGTH,
+    load_in_4bit = True
+  )
+
+  model = FastLanguageModel.get_peft_model(
+      model,
+      r=globals.LORA_R,
+      lora_alpha=globals.LORA_ALPHA,
+      lora_dropout=globals.LORA_DROPOUT,
+      bias="none",
+      target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj",],
+      use_gradient_checkpointing="unsloth",
+      random_state=3407
+  )
+
+  FastLanguageModel.for_inference(model)
+  print("Model loaded and configured for inference.")
+
+  return model, tokenizer
 
 def generate_response(question, model, tokenizer):
   instruction = f"Answer the question based on the given data. {question} Show evidence of how you reach the conclusion."
