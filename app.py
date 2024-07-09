@@ -7,9 +7,14 @@ from process_resume import process_resume
 st.set_page_config(page_title="Resume Question-Answering")
 st.header("Resume Question Answering")
 
+@st.cache_resource
+def initialize_models():
+    model_1, tokenizer_1 = load_model(globals.BASE_MODEL_DATASET)
+    model_2, tokenizer_2 = load_model(globals.BASE_MODEL_TRAINING)
+    return model_1, tokenizer_1, model_2, tokenizer_2
+
 with st.spinner("Initializing..."):
-        model_1, tokenizer_1 = load_model(globals.BASE_MODEL_DATASET)
-        model_2, tokenizer_2 = load_model(globals.BASE_MODEL_TRAINING)
+    model_1, tokenizer_1, model_2, tokenizer_2 = initialize_models()
 st.write("Initialization done.")
 
 def main():
