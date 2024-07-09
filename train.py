@@ -8,7 +8,7 @@ from initialize import hf_token, hf_token2
 from process_resume import fine_tuning_dataset
 
 def train_model(model, tokenizer):
-  trainer = setup_training(model ,tokenizer, fine_tuning_dataset, hf_token)
+  trainer, training_arguments = setup_training(model ,tokenizer, fine_tuning_dataset, hf_token)
 
   print("Starting training.")
   trainer.train()
@@ -16,6 +16,8 @@ def train_model(model, tokenizer):
 
   #mlflow.log_metrics(trainer_stats.metrics)
   mlflow.log_metrics(trainer.state.log_history[-1])
+
+  return training_arguments
 
 def setup_training(model, tokenizer, dataset, hf_token):
   global training_arguments
@@ -64,7 +66,7 @@ def setup_training(model, tokenizer, dataset, hf_token):
   )
 
   os.environ['OMP_NUM_THREADS'] = '1'
-  return trainer
+  return trainer, training_arguments
 
 def save_trained_model(model, tokenizer):
   model.save_pretrained(globals.NEW_MODEL)
@@ -72,3 +74,4 @@ def save_trained_model(model, tokenizer):
   model.push_to_hub_merged(f"{globals.NEW_MODEL}-merged", tokenizer, save_method = "merged_16bit", token = hf_token2)
   model.push_to_hub(globals.NEW_MODEL, tokenizer, save_method = "lora", token = hf_token2)
   mlflow.log_artifact(globals.NEW_MODEL, artifact_path="model")
+

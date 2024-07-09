@@ -8,16 +8,17 @@ import shutil
 from datasets import load_dataset, Dataset, DatasetDict
 from huggingface_hub import hf_hub_download, login, upload_file
 from initialize import hf_token2
-from mlflow_log import log_mlflow_params
+import mlflow
+
 
 def process_resume(files):
     upload_files_to_drive(files)
     generate_QA_pairs(model_1, tokenizer_1)
     split_data()
     setup_fine_tuning_dataset(tokenizer_2)
-    train_model(model_2, tokenizer_2)
+    training_arguments = train_model(model_2, tokenizer_2)
     save_trained_model(model_2, tokenizer_2)
-    log_mlflow_params()
+    log_mlflow_params(training_arguments)
 
 def upload_files_to_drive(files):
   os.makedirs(globals.TARGET_FOLDER, exist_ok=True)
@@ -173,3 +174,38 @@ def setup_fine_tuning_dataset(tokenizer):
   fine_tuning_dataset = dataset.map(format_prompt, batched = True)
 
   print("Fine-tuning dataset loaded and formatted.") 
+
+def log_mlflow_params(training_arguments):
+  with mlflow.start_run() as run:
+    mlflow.log_params({
+      "base_model": globals.BASE_MODEL_TRAINING,
+      "new_model": globals.NEW_MODEL,
+      "dataset_name": globals.DATASET_NAME,
+      "lora_r": globals.LORA_R,
+      "lora_alpha": globals.LORA_ALPHA,
+      "lora_dropout": globals.LORA_DROPOUT,
+      "max_seq_length": globals.MAX_SEQ_LENGTH,
+      "output_dir": training_arguments.output_dir,
+      "batch_size": training_arguments.per_device_train_batch_size,
+      "eval_size": training_arguments.per_device_eval_batch_size,
+      "gradient_accumulation_steps": training_arguments.gradient_accumulation_steps,
+      "optimizer": globals.OPTIMIZER,
+      "save_steps": training_arguments.save_steps,
+      "logging_steps": training_arguments.logging_steps,
+      "learning_rate": training_arguments.learning_rate,
+      "fp16": training_arguments.fp16,
+      "bf16": training_arguments.bf16,
+      "gradient_checkpointing": training_arguments.gradient_checkpointing,
+      "evaluation_strategy": training_arguments.evaluation_strategy,
+      "save_strategy": training_arguments.save_strategy,
+      "max_grad_norm": training_arguments.max_grad_norm,
+      "max_steps": training_arguments.max_steps,
+      "num_train_epochs": training_arguments.num_train_epochs,
+      "weight_decay": training_arguments.weight_decay,
+      "warmup_steps": training_arguments.warmup_steps,
+      "lr_scheduler_type": training_arguments.lr_scheduler_type,
+      "load_best_model_at_end": training_arguments.load_best_model_at_end,
+      "metric_for_best_model": training_arguments.metric_for_best_model,
+      "greater_is_better": training_arguments.greater_is_better,
+      "seed": training_arguments.seed,
+    })

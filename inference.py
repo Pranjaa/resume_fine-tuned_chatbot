@@ -1,5 +1,5 @@
 import globals
-from mlflow_log import log_mlflow_inference
+import mlflow
 
 def generate_response(question, model, tokenizer):
   instruction = f"Answer the question based on the given data. {question} Show evidence of how you reach the conclusion."
@@ -19,5 +19,8 @@ def generate_response(question, model, tokenizer):
       break
 
   log_mlflow_inference(instruction, response)
-
   return response
+
+def log_mlflow_inference(instruction, response):
+  mlflow.log_text(instruction, "inference/instruction.txt")
+  mlflow.log_text(response, "inference/response.txt")

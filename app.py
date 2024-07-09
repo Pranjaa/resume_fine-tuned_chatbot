@@ -1,8 +1,8 @@
-import streamlit as st
 import requests
-from initialize import initialize, model_1, tokenizer_1
+import streamlit as st
 from inference import generate_response
 from process_resume import process_resume
+from initialize import initialize, model_1, tokenizer_1
 
 st.set_page_config(page_title="Resume Question-Answering")
 st.header("Resume Question Answering")
