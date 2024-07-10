@@ -10,10 +10,10 @@ st.header("Resume Question Answering")
 @st.cache_resource
 def initialize_models():
     model_1, tokenizer_1 = load_model(globals.BASE_MODEL_DATASET)
-    model_2, tokenizer_2 = load_model(globals.BASE_MODEL_TRAINING)
-    return model_1, tokenizer_1, model_2, tokenizer_2
+    #model_2, tokenizer_2 = load_model(globals.BASE_MODEL_TRAINING)
+    return model_1, tokenizer_1
 
-model_1, tokenizer_1, model_2, tokenizer_2 = initialize_models()
+model_1, tokenizer_1 = initialize_models()
 st.write("Initialization done.")
 
 def main():
@@ -28,7 +28,7 @@ def main():
                 st.error("Please upload at least one resume file.")
             else:
                 with st.spinner("Processing resumes... this might take a while..."):
-                    process_resume(uploaded_files, model_1, tokenizer_1, model_2, tokenizer_2)
+                    process_resume(uploaded_files, model_1, tokenizer_1)
                 st.success("Resumes are processed. Model is retrained.")    
 
                 try:

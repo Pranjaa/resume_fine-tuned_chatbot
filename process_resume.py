@@ -9,13 +9,13 @@ from train import train_model, save_trained_model
 from datasets import load_dataset, Dataset, DatasetDict
 from huggingface_hub import hf_hub_download, login, upload_file
 
-def process_resume(files, model_1, tokenizer_1, model_2, tokenizer_2):
+def process_resume(files, model_1, tokenizer_1):
     upload_files_to_drive(files)
     generate_QA_pairs(model_1, tokenizer_1)
     split_data()
-    fine_tuning_dataset = setup_fine_tuning_dataset(tokenizer_2)
-    training_arguments = train_model(model_2, tokenizer_2, fine_tuning_dataset)
-    save_trained_model(model_2, tokenizer_2)
+    fine_tuning_dataset = setup_fine_tuning_dataset(tokenizer_1)
+    training_arguments = train_model(model_1, tokenizer_1, fine_tuning_dataset)
+    save_trained_model(model_1, tokenizer_1)
     log_mlflow_params(training_arguments)
 
 def upload_files_to_drive(files):

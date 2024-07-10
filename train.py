@@ -38,7 +38,7 @@ def setup_training(model, tokenizer, dataset, hf_token):
     save_strategy="epoch",
     max_grad_norm=1.0,
     max_steps=20,
-    num_train_epochs=3,
+    #num_train_epochs=3,
     weight_decay=0.01,
     warmup_steps=100,
     lr_scheduler_type="cosine",

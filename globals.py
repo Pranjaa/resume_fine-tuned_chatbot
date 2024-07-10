@@ -1,6 +1,6 @@
 BASE_MODEL_DATASET = "Pranja/mistral-7b-unsloth-merged"
 BASE_MODEL_TRAINING = "unsloth/gemma-2b-bnb-4bit"
-NEW_MODEL = "fine-tuned-model-gemma"
+NEW_MODEL = "fine-tuned-model-mistral"
 DATASET_NAME = "Pranja/Resumes"
 DIRECTORY_PATH = "training_data"
 DATA_FILE_PATH = "training_data/data.json"
