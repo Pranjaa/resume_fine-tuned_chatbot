@@ -76,9 +76,9 @@ def generate_QA_pairs(model, tokenizer):
     with open(globals.DATA_FILE_PATH, "w", encoding="utf-8") as json_file:
       json.dump(all_results, json_file, indent=4)
 
-    store_file_path = os.path.join(globals.STORE_FOLDER, "")
-    shutil.move(text_file, store_file_path)
-    print(f"File moved to: {store_file_path}")
+    #store_file_path = os.path.join(globals.STORE_FOLDER, "")
+    #shutil.move(text_file, store_file_path)
+    #print(f"File moved to: {store_file_path}")
 
   print("QA pairs generated and saved.")
 
