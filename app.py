@@ -13,8 +13,7 @@ def initialize_models():
     model_2, tokenizer_2 = load_model(globals.BASE_MODEL_TRAINING)
     return model_1, tokenizer_1, model_2, tokenizer_2
 
-with st.spinner("Initializing..."):
-    model_1, tokenizer_1, model_2, tokenizer_2 = initialize_models()
+model_1, tokenizer_1, model_2, tokenizer_2 = initialize_models()
 st.write("Initialization done.")
 
 def main():

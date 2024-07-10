@@ -20,6 +20,7 @@ def process_resume(files, model_1, tokenizer_1, model_2, tokenizer_2):
 
 def upload_files_to_drive(files):
     os.makedirs(globals.TARGET_FOLDER, exist_ok=True)
+    os.makedirs(globals.STORE_FOLDER, exist_ok=True)
 
     for uploaded_file in files:
         filename = uploaded_file.name
@@ -37,6 +38,8 @@ def generate_QA_pairs(model, tokenizer):
 
   os.makedirs(globals.DIRECTORY_PATH, exist_ok=True)
   data_file_path = os.path.join(globals.DATA_FILE_PATH, "data.json")
+
+  os.makedirs(globals.STORE_FOLDER, exist_ok=True)
 
   if os.path.exists(data_file_path):
     with open(data_file_path, "r", encoding="utf-8") as json_file:
@@ -73,7 +76,7 @@ def generate_QA_pairs(model, tokenizer):
     with open(globals.DATA_FILE_PATH, "w", encoding="utf-8") as json_file:
       json.dump(all_results, json_file, indent=4)
 
-    store_file_path = os.path.join(globals.STORE_FOLDER, os.path.basename(text_file))
+    store_file_path = os.path.join(globals.STORE_FOLDER, "")
     shutil.move(text_file, store_file_path)
     print(f"File moved to: {store_file_path}")
 
