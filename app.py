@@ -10,7 +10,6 @@ st.header("Resume Question Answering")
 @st.cache_resource
 def initialize_models():
     model_1, tokenizer_1 = load_model(globals.BASE_MODEL_DATASET)
-    #model_2, tokenizer_2 = load_model(globals.BASE_MODEL_TRAINING)
     return model_1, tokenizer_1
 
 model_1, tokenizer_1 = initialize_models()
