@@ -1,6 +1,4 @@
-torch
 streamlit
-requests
 mlflow
 databricks-sdk
 python-docx
