@@ -6,7 +6,7 @@ packaging
 ninja
 einops
 flash-attn
-xformers
+xformers==0.0.26.post1
 trl
 peft
 accelerate
