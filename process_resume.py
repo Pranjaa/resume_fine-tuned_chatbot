@@ -9,15 +9,17 @@ from train import train_model, save_trained_model
 from datasets import load_dataset, Dataset, DatasetDict
 from huggingface_hub import hf_hub_download, login, upload_file
 
-def process_resume(files, model_1, tokenizer_1):
+#Function to process new resumes
+def process_resume(files, model, tokenizer):
     upload_files_to_drive(files)
-    generate_QA_pairs(model_1, tokenizer_1)
+    generate_QA_pairs(model, tokenizer)
     split_data()
-    fine_tuning_dataset = setup_fine_tuning_dataset(tokenizer_1)
-    training_arguments = train_model(model_1, tokenizer_1, fine_tuning_dataset)
-    save_trained_model(model_1, tokenizer_1)
+    fine_tuning_dataset = setup_fine_tuning_dataset(tokenizer)
+    training_arguments = train_model(model, tokenizer, fine_tuning_dataset)
+    save_trained_model(model, tokenizer)
     log_mlflow_params(training_arguments)
 
+#Upload files to Google Drive
 def upload_files_to_drive(files):
     os.makedirs(globals.TARGET_FOLDER, exist_ok=True)
     os.makedirs(globals.STORE_FOLDER, exist_ok=True)
@@ -32,6 +34,7 @@ def upload_files_to_drive(files):
         shutil.move(filename, destination_path)
         print(f"File {filename} uploaded to {destination_path}")
 
+#Generate QA pairs using fine-tuned model
 def generate_QA_pairs(model, tokenizer):
   print("Generating QA pairs.")
   all_results = []
@@ -76,12 +79,9 @@ def generate_QA_pairs(model, tokenizer):
     with open(globals.DATA_FILE_PATH, "w", encoding="utf-8") as json_file:
       json.dump(all_results, json_file, indent=4)
 
-    #store_file_path = os.path.join(globals.STORE_FOLDER, "")
-    #shutil.move(text_file, store_file_path)
-    #print(f"File moved to: {store_file_path}")
-
   print("QA pairs generated and saved.")
 
+#Split data into training and validation sets
 def split_data(train_ratio=0.8):
   print("Splitting data into training and validation sets...")
   filepath = "training_data/data.json"
@@ -160,6 +160,7 @@ def split_data(train_ratio=0.8):
 
   print(f"Dataset updated and pushed to Hugging Face Hub: Pranja/Resumes")
 
+#Load fine-tuning dataset
 def setup_fine_tuning_dataset(tokenizer):
   def format_prompt(examples):
     instructions = examples["instruction"]
@@ -184,6 +185,7 @@ def setup_fine_tuning_dataset(tokenizer):
 
   return fine_tuning_dataset
 
+#Log inference parameters on MLflow
 def log_mlflow_params(training_arguments):
   with mlflow.start_run() as run:
     mlflow.log_params({

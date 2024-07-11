@@ -4,9 +4,11 @@ import streamlit as st
 from inference import load_model, generate_response
 from process_resume import process_resume
 
+#Streamlit configuration
 st.set_page_config(page_title="Resume Question-Answering")
 st.header("Resume Question Answering")
 
+#Cache model to avoid reloading everytime
 @st.cache_resource
 def initialize_models():
     model_1, tokenizer_1 = load_model(globals.BASE_MODEL_DATASET)
@@ -18,6 +20,7 @@ st.write("Initialization done.")
 def main():
     question = st.text_input("Ask a question about the documents:")
 
+    #Section to upload and process new resumes
     with st.sidebar:
         st.subheader("Your documents:")
         uploaded_files = st.file_uploader("Upload the resumes:", type=['txt'], accept_multiple_files=True)
@@ -36,6 +39,7 @@ def main():
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error: {e}")
 
+    #Chatbot section
     if st.button("Submit Question"):
       with st.spinner('Generating Response...'):
         if not question:

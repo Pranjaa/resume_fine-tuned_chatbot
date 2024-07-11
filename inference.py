@@ -3,6 +3,7 @@ import torch
 import globals
 from unsloth import FastLanguageModel
 
+#Load model and tokenizer
 def load_model(model_name):
   torch.cuda.empty_cache()
   print(f"Loading model: {model_name}")
@@ -29,6 +30,7 @@ def load_model(model_name):
 
   return model, tokenizer
 
+#Generate response based on question asked
 def generate_response(question, model, tokenizer):
   instruction = f"Answer the question based on the given data. {question} Show evidence of how you reach the conclusion."
   inputs = tokenizer([globals.PROMPT_TEMPLATE.format(instruction, "", "",)], return_tensors = "pt").to("cuda")
@@ -49,6 +51,7 @@ def generate_response(question, model, tokenizer):
   log_mlflow_inference(instruction, response)
   return response
 
+#Log inference details to MLflow
 def log_mlflow_inference(instruction, response):
   mlflow.log_text(instruction, "inference/instruction.txt")
   mlflow.log_text(response, "inference/response.txt")

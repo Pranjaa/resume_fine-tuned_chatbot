@@ -6,6 +6,7 @@ from trl import SFTTrainer
 import os
 from config import hf_token, hf_token2
 
+#Retraining of the model
 def train_model(model, tokenizer, fine_tuning_dataset):
   trainer, training_arguments = setup_training(model ,tokenizer, fine_tuning_dataset, hf_token)
 
@@ -13,11 +14,11 @@ def train_model(model, tokenizer, fine_tuning_dataset):
   trainer.train()
   print("Training complete.")
 
-  #mlflow.log_metrics(trainer_stats.metrics)
   mlflow.log_metrics(trainer.state.log_history[-1])
 
   return training_arguments
 
+#Training initialization
 def setup_training(model, tokenizer, dataset, hf_token):
   global training_arguments
   print("Setting up training arguments.")
@@ -67,6 +68,7 @@ def setup_training(model, tokenizer, dataset, hf_token):
   os.environ['OMP_NUM_THREADS'] = '1'
   return trainer, training_arguments
 
+#Save fine-tuned model to Huggingface
 def save_trained_model(model, tokenizer):
   model.save_pretrained(globals.NEW_MODEL)
   model.save_pretrained_merged("outputs", tokenizer, save_method = "merged_16bit",)
